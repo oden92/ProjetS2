@@ -1,0 +1,13 @@
+<html lang="en">
+  <h3>Ask a Question</h3>
+  <form method="POST"> {% csrf_token %}
+    <input type="text" class="form-control" name="user_input" placeholder="Ask a question...">
+    <button type="submit" class="btn btn-primary mt-3">Ask</button>
+  </form>
+  {% if response %}
+    <div>
+      <h4>AI Response:</h4>
+      <p>{{ response }}</p>
+    </div>
+  {% endif %}
+</html>

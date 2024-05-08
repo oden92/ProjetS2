@@ -1,0 +1,77 @@
+<!-- chat.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with OpenAI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chat-box {
+            width: 80%;
+            height: 500px;
+            overflow-y: scroll;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        #user-input {
+            width: 80%;
+            height: 30px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #send-btn {
+            width: 20%;
+            height: 30px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #send-btn:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with OpenAI</h1>
+    <div id="chat-box">
+        <!-- chat messages will be displayed here -->
+    </div>
+    <input id="user-input" type="text" placeholder="Type a message...">
+    <button id="send-btn">Send</button>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var chatBox = $("#chat-box");
+            var userInput = $("#user-input");
+            var sendBtn = $("#send-btn");
+
+            sendBtn.click(function() {
+                var message = userInput.val().trim();
+                if (message !== "") {
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'chat_gpt' %}",
+                        data: {
+                            prompt: message
+                        },
+                        success: function(response) {
+                            var responseText = response.text;
+                            chatBox.append("<p>You: " + message + "</p>");
+                            chatBox.append("<p>OpenAI: " + responseText + "</p>");
+                            userInput.val("");
+                            chatBox.scrollTop(chatBox[0].scrollHeight);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
