@@ -1,91 +1,183 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import openai,os
 from dotenv import load_dotenv
-from .models import Article,Livre,Category
-from django.views.decorators.csrf import csrf_exempt 
-load_dotenv()
+from .models import Article,Livre,Category,Auteur
+import base64
+from io import BytesIO
+from PIL import Image
+import requests
+import media
+openai.api_key = "sk-proj-s1No2TLxSsEe551UWafLT3BlbkFJnXcsmsvf1pGbUSC32U1k"
 
-api_key = os.getenv("OPENAI_KEY", None)
-def detail(request,id_livre):
-    livre=Livre.objects.get(id=id_livre) 
-    category=livre.category
+
+
+def detail(request, id_livre):
+    livre = Livre.objects.get(id=id_livre)
+    category = livre.category
     livres_en_relation = Livre.objects.filter(category=category).order_by('title')[:5]
-    openai.api_key = "sk-proj-HuMbWINvafQ96sv9jLUsT3BlbkFJESwv7qk0dYz6SJFieRb4"
+    return render(request, 'detail.html', {"livre": livre, "ler": livres_en_relation})
 
-# Define the user's input (e.g. a question)
-    user_input = "Summarize the book titled" +livre.title
+def my_view(request):
+    result = ''  
+    categories = Category.objects.all().order_by()
+    auteurs = Auteur.objects.all().order_by()
+    user_input = '' 
+    if request.method == 'POST':
+        user_input1 = request.POST.get('user_input2')
+        user_input2 = request.POST.get('user_input3')
+        user_input3 = request.POST.get('user_input1')
+        auteur_id = request.POST.get('auteeurs')  
+        category_id = request.POST.get('category')
+        category_id = request.POST.get('category')  
+        if category_id:
+            category_id=Category.objects.get(naid=category_id) 
+            category_id = Category.objects.get(id=category_id)
+        else:
+            category_id=Category(name=user_input3)
+            category_id.save()
+        if auteur_id:
+            auteur_id = Auteur.objects.get(id=auteur_id)
+        else:
+            auteur_id=Auteur(name=user_input2)
+            auteur_id.save()
+        
+        result = user_input1 
+        
+        user_input = "Resume livre intitulé " + result
 
-# Define the model and parameters for the response
-    model = "gpt-3.5-turbo"
-    temperature = 0.7
+        model = "gpt-3.5-turbo"
+        temperature = 0.7
 
-# Create a chat completion request
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=[
-            {"role": "user", "content": user_input}
-        ],
-        temperature=temperature
-    )
-
-# Print the response
-    response=(response.choices[0].message.content)
-    livre.desc=response
-    return render(request,'detail.html',{"livre":livre,"ler":livres_en_relation,"response":response})
-
-def chatbot(request):
-    chatbot_response = ""  # Initialize with an empty string
-
-    if api_key is not None and request.method == 'POST':
-        openai.api_key = api_key
-        user_input = request.POST.get('user_input')
-        prompt = user_input
-
-        response = openai.Completion.create(
-            engine='gpt-3.5-turbo-instruct',
-            prompt=prompt,
-            max_tokens=256,
-            temperature=0.5,
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=[
+                {"role": "user", "content": user_input}
+            ],
+            temperature=temperature
         )
-        print(response)
 
-        chatbot_response = response.choices[0].message
-        print(chatbot_response)
+        response = response.choices[0].message.content
+        desc = response
+        prompt = "livre qui a une page de couverture" + result
+        n = 1
+        size = "256x256"
+        response = openai.Image.create(
+            prompt=prompt,
+            n=n,
+            size=size
+        )
 
-        return render(request, 'main.html', {"response": chatbot_response})
-    return render(request, 'chatbot.html')
+        image_url = response["data"][0]["url"]
+        response = requests.get(image_url)
+        image_data = response.content
+        
+        filename = 'media/' + result + '.png'
+
+        with open(filename, 'wb') as f:
+            f.write(image_data)
 
 
-def home(request):
-    list_articles=Article.objects.all()
-    context={"liste_articles":list_articles}
-    return render(request,"index.html",context )
+        limage = result+'.png'  # Update the image field with the file path
+        
 
-def detail3(request,id_livre):
-    livre=Livre.objects.get(id=id_livre) 
-    category=livre.category
-    livres_en_relation = Livre.objects.filter(category=category).order_by('title')[:5]
-    return render(request,'detail.html',{"livre":livre,"ler":livres_en_relation})
+        livre = Livre.objects.create(title=result, category =category_id, auteur=auteur_id, desc=desc, image=limage)
+        livre.save()
+
+    
+
+    
+
+    return render(request, 'my_view.html', {"result": result,"categories":categories,"auteurs":auteurs})
+
 
 def detail2(request):
-    return render(request,"detail2.html")
+    livre = Livre.objects.all()
+    if request.method == 'POST':
+        user_input1 = request.POST.get('user_input1')
+        if user_input1 != "" and user_input1 is not None:
+            livre = Livre.objects.filter(title__icontains=user_input1)
+            return render(request, "noslivres.html", {"liste_livres": livre})  # <--- Use redirect instead of render
+    return render(request, "detail2.html")
+
+
+
 
 def noslivres(request):
-    liste_livres = Livre.objects.all().order_by("?")
+    liste_livres = Livre.objects.all().order_by("-title")
     context = {"liste_livres": liste_livres}
+    livre = Livre.objects.all()
+    if request.method == 'POST':
+        user_input1 = request.POST.get('user_input1')
+        if user_input1 != "" and user_input1 is not None:
+            livre = Livre.objects.filter(title__icontains=user_input1)
+            return render(request, "noslivres.html", {"liste_livres": livre})
+    return render(request, "noslivres.html", context)
+ 
+def auteur(request):
+    auteur= Auteur.objects.all().order_by('-name')
+    livre = Livre.objects.all()
+    if request.method == 'POST':
+        user_input1 = request.POST.get('user_input1')
+        if user_input1 != "" and user_input1 is not None:
+            livre = Livre.objects.filter(title__icontains=user_input1)
+            return render(request, "noslivres.html", {"liste_livres": livre})
+    context = {"liste_auteurs": auteur}
+    return render(request, "nosauteurs.html", context)
+
+
+def noslivresauteur(request,auteur_id):
+    listelivre=Livre.objects.filter(auteur_id=auteur_id)
+    livre = Livre.objects.all()
+    if request.method == 'POST':
+        user_input1 = request.POST.get('user_input1')
+        if user_input1 != "" and user_input1 is not None:
+            livre = Livre.objects.filter(title__icontains=user_input1)
+            return render(request, "noslivres.html", {"liste_livres": livre})
+    context = {"liste_livres": listelivre}
     return render(request, "noslivres.html", context)
 
 
-def noslivresalphabetique(request):
-    liste_livres = Livre.objects.all().order_by('-category_id')
+def nosauteurs(request):
+    liste_auteurs = Auteur.objects.all().order_by("?")
+    livre = Livre.objects.all()
+    if request.method == 'POST':
+        user_input1 = request.POST.get('user_input1')
+        if user_input1 != "" and user_input1 is not None:
+            livre = Livre.objects.filter(title__icontains=user_input1)
+            return render(request, "noslivres.html", {"liste_livres": livre})
+    context = {"liste_auteurs": liste_auteurs}
+    return render(request, "nosauteurs.html", context)
+
+def auteurslivres(request, auteur):
+    auteur = Auteur.objects.get(name=auteur)
+    livre = Livre.objects.all()
+    if request.method == 'POST':
+        user_input1 = request.POST.get('user_input1')
+        if user_input1 != "" and user_input1 is not None:
+            livre = Livre.objects.filter(title__icontains=user_input1)
+            return render(request, "noslivres.html", {"liste_livres": livre})
+    liste_livres = Livre.objects.filter(auteur=auteur)
     context = {"liste_livres": liste_livres}
     return render(request, "noslivres.html", context)
 
 def genre(request):
-    return render(request ,"genre.html")
+    category = Category.objects.all().order_by('?')
+    livre = Livre.objects.all()
+    if request.method == 'POST':
+        user_input1 = request.POST.get('user_input1')
+        if user_input1 != "" and user_input1 is not None:
+            livre = Livre.objects.filter(title__icontains=user_input1)
+            return render(request, "noslivres.html", {"liste_livres": livre})
+    return render(request ,"genre.html",{"category":category})
 
 def genre_category(request, category):
     category = Category.objects.get(name=category)
+    livre = Livre.objects.all()
+    if request.method == 'POST':
+        user_input1 = request.POST.get('user_input1')
+        if user_input1 != "" and user_input1 is not None:
+            livre = Livre.objects.filter(title__icontains=user_input1)
+            return render(request, "noslivres.html", {"liste_livres": livre})
     liste_livres = Livre.objects.filter(category=category)
     context = {"liste_livres": liste_livres}
     return render(request, "noslivres.html", context)

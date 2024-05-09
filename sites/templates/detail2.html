@@ -1,48 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BiblioNanterre</title>
-    <!-- MDB CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css" />
-</head>
-
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">BiblioNanterre</a>
-            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="home">Page d'acceuil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends "base.html" %}
+{% block content %}
 
     <!-- Hero Section -->
-    <section class="bg-image" style="background-image: url('https://mdbootstrap.com/img/new/standard/city/041.jpg'); height: 100vh;">
+    <section class="bg-image" style="background-image: url('https://cdn.paris.fr/paris/2020/03/25/huge-49c1acd4aa28ca2685a3b8793ed22d8b.jpg'); height: 100vh;">
         <div class="mask d-flex align-items-center h-100 gradient-custom-3">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12">
                         <div class="text-center">
+                        <div class="text-center text-white bg-dark p-2 rounded  w-100">
                             <h1 class="mb-5">Bienvenue à la BiblioNanterre</h1>
+                        </div>
                             <p class="lead mb-5">Voulez-voir nos livres ?</p>
                             <a href="{%url 'noslivres' %}" class="btn btn-primary" data-mdb-ripple-init>CLiquez ici</a>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -66,16 +37,16 @@
                     <div class="col-md-4">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <h5 class="card-title">Livres par ordre alphabétique</h5>
-                                <a href="{%url 'noslivresalphabetique' %}" class="btn btn-primary" data-mdb-ripple-init>CLiquez ici</a>
+                                <h5 class="card-title">Livres triés par auteurs</h5>
+                                <a href="{%url 'auteur' %}" class="btn btn-primary" data-mdb-ripple-init>CLiquez ici</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <h5 class="card-title">Vous avez des questions sur nos livres ?</h5>
-                                <a href="{%url 'chatbot' %}" class="btn btn-primary" data-mdb-ripple-init>CLiquez ici</a>
+                                <h5 class="card-title">Vous voulez rajouter un livre ?</h5>
+                                <a href="{%url 'my_view' %}" class="btn btn-primary" data-mdb-ripple-init>CLiquez ici</a>
                             </div>
                         </div>
                     </div>
@@ -83,48 +54,5 @@
             </div>
         </div>
     </section>
-    <div class="form-floating mb-3">
-  <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-  <label for="floatingInput">Email address</label>
-</div>
-<div class="form-floating">
-  <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-  <label for="floatingPassword">Password</label>
-</div>
+    {% endblock %}
 
-    <!-- Footer -->
-    <footer class="bg-light text-center text-lg-start">
-        <div class="container p-4">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Projet s2 Informatique</h5>
-                    <p>
-                        Bekkari Salah-eddine
-                    </p>
-                </div>
-                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Links</h5>
-                    <ul class="list-unstyled mb-0">
-                        <li>
-                            <a href="#" class="text-dark">Link 1</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-dark">Link 2</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-dark">Link 3</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2023 BiblioNanterre
-        </div>
-    </footer>
-
-    <!-- MDB JavaScript -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"></script>
-</body>
-
-</html>

@@ -1,4 +1,8 @@
-from django.db import models
+from django.db import models 
+from django import forms 
+from django.contrib.auth.models import User
+
+
 class Category(models.Model):
     name= models.CharField(max_length=120)
 
@@ -7,6 +11,8 @@ class Category(models.Model):
 
 class Auteur(models.Model):
     name=models.CharField(max_length=120)
+    desc=models.TextField()
+    image=models.ImageField()
 
     def __str__(self):
         return self.name
@@ -36,5 +42,9 @@ class Article(models.Model):
     def __str__(self) :
         return self.title
 
+class UserLibrary(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    livres = models.ManyToManyField(Livre)
 
-
+    def __str__(self):
+        return f"{self.user.username}'s library"

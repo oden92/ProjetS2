@@ -1,23 +1,35 @@
+import os
 import openai
+from PIL import Image
+import requests
 
-# Set up OpenAI API credentials
-openai.api_key = "sk-proj-HuMbWINvafQ96sv9jLUsT3BlbkFJESwv7qk0dYz6SJFieRb4"
+def generate_cat_image(prompt, size="256x256", n=1):
+    # Set API key from environment variable
+    openai.api_key = "sk-proj-s1No2TLxSsEe551UWafLT3BlbkFJnXcsmsvf1pGbUSC32U1k"
 
-# Define the user's input (e.g. a question)
-user_input = "What is the best way to learn Python?"
+    # Create image generation request
+    response = openai.Image.create(
+        prompt=prompt,
+        n=n,
+        size=size
+    )
 
-# Define the model and parameters for the response
-model = "gpt-3.5-turbo"
-temperature = 0.7
+    # Extract image URL from response
+    image_url = response["data"][0]["url"]
 
-# Create a chat completion request
-response = openai.ChatCompletion.create(
-    model=model,
-    messages=[
-        {"role": "user", "content": user_input}
-    ],
-    temperature=temperature
-)
+    # Download image from URL
+    response = requests.get(image_url)
+    image_data = response.content
 
-# Print the response
-print(response.choices[0].message)
+    # Save image to file
+    with open("popeyes.png", "wb") as f:
+        f.write(image_data)
+
+    # Open image using PIL
+    image = Image.open("popeyes.png")
+
+    # Display image
+    image.show()
+
+# Example usage
+generate_cat_image("page de couverture les miserables de victor hugo")

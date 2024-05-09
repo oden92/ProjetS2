@@ -1,39 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BiblioNanterre</title>
-    <!-- MDB CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css" />
-</head>
-
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">BiblioNanterre</a>
-            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="home">Page d'acceuil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-
+{% extends "base.html" %}
+{% block content %}
 <div class="container">
   <div class="row">
     <div class="col-md-8">
@@ -48,15 +14,11 @@
         {%for liv in ler%}
         {% if liv.id != livre.id %}
         <div class="col-md-7 mb-1">
-          {%if liv.image != "http://default" %}
             <img src="{{liv.image.url}}" alt="" style="max-width: 160px">
-          {% else %}
-              <img src=" http://via.placeholder.com/400x300" class="card-img-top" style="max-width: 160px">
-            {%endif%}
           </div>
-          <div class=" col-5">
-          <strong><a href="{%url 'detail' livre.id %}" class="btn btn-primary" data-mdb-ripple-init>{{liv.title}}</a> </strong><br>
-          {{liv.desc|truncatewords:7}}
+        <div class=" col-5">
+          <strong><a href="{%url 'detail' liv.id %}" class="btn btn-primary" data-mdb-ripple-init>{{liv.title}}</a> </strong><br>
+          {{liv.desc|truncatewords:8}}
         </div>
         {%endif%}
         {%endfor%}
@@ -67,39 +29,5 @@
 </div>
 
 
-    <!-- Footer -->
-    <footer class="bg-light text-center text-lg-start">
-        <div class="container p-4">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Projet s2 Informatique</h5>
-                    <p>
-                        Bekkari Salah-eddine
-                    </p>
-                </div>
-                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Links</h5>
-                    <ul class="list-unstyled mb-0">
-                        <li>
-                            <a href="#" class="text-dark">Link 1</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-dark">Link 2</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-dark">Link 3</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2023 BiblioNanterre
-        </div>
-    </footer>
 
-    <!-- MDB JavaScript -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"></script>
-</body>
-
-</html>
+ {%endblock%}
