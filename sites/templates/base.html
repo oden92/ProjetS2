@@ -20,9 +20,9 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'detail2' %}">Page d'acceuil</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Page d'accueil</a>
                     </li>
-                    <form method="post" action="{% url 'detail2' %}" class="right-align">
+                    <form method="post" action="{% url 'home' %}" class="right-align">
                         {% csrf_token %}
                         <input type="text" name="user_input1" />
                         <button type="submit" class="btn btn-light mb-0.1">Cherchez des livres</button>
@@ -45,10 +45,10 @@
                         Bekkari Salah-eddine Td07
                     </p>
                     <p>
-                        Rania
+                        Dounia Abderemane
                 </div>
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2023 BiblioNanterre
+            © 2024 BiblioNanterre
         </div>
     </footer>
 

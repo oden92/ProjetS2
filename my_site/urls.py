@@ -18,20 +18,20 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
-from sites.views import detail,detail2,noslivres,genre,genre_category,nosauteurs,auteurslivres,my_view,noslivresauteur,auteur
+from sites.views import detail,home,noslivres,genre,genre_category,nosauteurs,newlivre,noslivresauteur,auteur,bioauteurs
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', detail2,name="detail2"),
+    path('', home,name="home"),
     path('livre/<int:id_livre>',detail,name="detail"),
     path("noslivres",noslivres,name="noslivres"),
     path("auteur",auteur,name="auteur"),
     path("genre",genre,name="genre"),
     path('genres/<str:category>/', genre_category, name='genre_category'),
     path("nosauteurs",nosauteurs,name="nosauteurs"),
-    path('auteurs/<str:auteur>/', auteurslivres, name='auteurslivres'),
-    path("my_view",my_view,name="my_view"),
-    path('noslivresauteur/<int:auteur_id>',noslivresauteur,name="noslivresauteur")
+    path("auteurs/<str:auteur>/",bioauteurs,name='bioauteurs'),
+    path("newlivre",newlivre,name="newlivre"),
+    path('noslivresauteur/<int:auteur_id>',noslivresauteur,name="noslivresauteur"),
 
 
     ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

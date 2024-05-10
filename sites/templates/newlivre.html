@@ -39,6 +39,6 @@
     <button type="submit" class="btn btn-primary">Envoyer</button>
 </form>
 
-<p class="lead">Résultat : {{ result }}</p>
+<p class="lead">Résultat : {%if result%} {{result }} est ajouté {%endif%}</p>
 
 {% endblock %}

@@ -6,12 +6,11 @@
           {%for auteurs in liste_auteurs %}
           <div class=" col-md-6 col-lg-3 col-xl-3">
             <div class="card">
-        <a href="{%url 'detail2' %}">
-
-          </a>
+              <a href="{%url  'bioauteurs' auteurs.id %}">
+              </a>
           <div class="card-body" style="height: 230px;">
-            <h5 class="card-title"><a href="{%url 'detail2' %}">{{auteurs}}</a></h4>
-              <a href="{%url 'noslivresauteur' auteurs.id %}" class="btn btn-primary" data-mdb-ripple-init>Boutton</a>
+            <h5 class="card-title"><a href="{%url 'bioauteurs' auteurs.id  %}">{{auteurs}}</a></h4>
+              <a href="{%url 'bioauteurs' auteurs.id %}" class="btn btn-primary" data-mdb-ripple-init>accéder à sa Biographie</a>
           </div>
         </div>
       </div>

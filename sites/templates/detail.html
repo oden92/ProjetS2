@@ -2,14 +2,20 @@
 {% block content %}
 <div class="container">
   <div class="row">
+    <h2>{{livre.title}} écrit par {{livre.auteur}}</h2>
     <div class="col-md-8">
-      <h1 class="text-center-mt-2">Detail</h1>
       <img src="{{livre.image.url}}" alt="" style="max-width: 600px;">
-      <h2>{{livre.title}}</h2>
+      <div>
+      <h2>Résumé :</h2>
       <p>{{livre.desc}}</p>
     </div>
+      <div>
+        <p>Recommandations:</p>
+      <p>{{livre.lien}}</p>
+    </div>
+    </div>
     <div class="col-md-4">
-      <h3 class="mt-2">les articles en relations</h3 class="mt-2">
+      <h3 class="mt-2">Livres du même genre :</h3 class="mt-2">
       <div class="row">
         {%for liv in ler%}
         {% if liv.id != livre.id %}
